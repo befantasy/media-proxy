@@ -39,7 +39,9 @@ const handler: ExportedHandler<Env> = {
     if (!response.ok || !response.body) return new Response(response.statusText, { status: response.status });
 
     const contentType = response.headers.get('content-type');
-    if (!contentType?.startsWith('image/')) return new Response('Not an image', { status: 400 });
+		const isImageType = contentType?.startsWith('image/') ||
+  		requestUrl.pathname.match(/\.(avif|webp|jpg|jpeg|png|gif|bmp|tiff)$/i);
+		if (!isImageType) return new Response('Not an image', { status: 400 });
 
     const blob = await response.blob();
 
